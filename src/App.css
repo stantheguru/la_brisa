@@ -76,6 +76,10 @@ width: 50%;
   
 }
 
+.labelCode{
+  letter-spacing: 2px;
+}
+
 .buttons {
   flex-direction: row;
   width: 50%;
@@ -93,17 +97,42 @@ width: 50%;
   background-color: white;
   margin-right: 10%;
   cursor: pointer;
+  font-size: 16px;
  
 }
 
 .submit {
   width: 60%;
-  
+  border-width: 0.15rem;
+  border-style: solid;
   border-radius: 0.5rem;
   padding: 0.6rem;
   background-color: black;
   color: white;
   cursor: pointer;
+  font-size: 16px;
+}
+
+.loginBtn {
+  width: 50%;
+  border-width: 0.15rem;
+  border-style: solid;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.loginText{
+  color: lightskyblue;
+  cursor: pointer;
+
+}
+
+.already{
+  margin-top: 20px;
 }
 
 .textfield img {
@@ -234,7 +263,7 @@ width: 50%;
 .movie:hover div:nth-of-type(1) {
   opacity: 1;
 }
-
+/*
 @media screen and (max-width: 600px) {
   .app {
     padding: 4rem 2rem;
@@ -253,7 +282,7 @@ width: 50%;
     width: 20px;
     height: 20px;
   }
-}
+}*/
 
 @media screen and (max-width: 600px) {
   .app {
@@ -274,6 +303,18 @@ width: 50%;
       width: 90%;
      
     
+    }
+
+    .loginBtn {
+      width: 90%;
+      border-width: 0.15rem;
+      border-style: solid;
+      border-radius: 0.5rem;
+      padding: 0.6rem;
+      background-color: black;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
     }
   .textfield {
     width: 90%;
