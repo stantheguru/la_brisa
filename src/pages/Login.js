@@ -2,9 +2,13 @@ import '../App.css';
 import eye from './assets/eye.png'
 import eyeoff from './assets/eye-off.png'
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 
 
 function Login() {
+  const navigate = useNavigate();
+
   const [rightIcon, setRightIcon] = useState(eyeoff);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [error, setError] = useState("")
@@ -70,7 +74,7 @@ function Login() {
         <button className='loginBtn' onClick={login}>Login</button>
       
       <h5 className='error'>{error}</h5>
-      <h5 className='already'>Don't have an account?<a><span className='loginText'> Signup</span></a></h5>
+      <h5 className='already'>Don't have an account?<span onClick={() => navigate(`/signup`)} className='loginText'> Signup</span></h5>
 
     </>
   );
