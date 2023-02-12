@@ -4,8 +4,11 @@ import eyeoff from './assets/eye-off.png'
 import { useState } from 'react';
 
 import { useNavigate } from "react-router-dom";
+import * as base from "../env";
 
 
+
+var url = base.BASE_URL
 
 function Signup() {
   const navigate = useNavigate();
@@ -16,6 +19,7 @@ function Signup() {
   const [name, setName] = useState("")
   const [mobile, setMobile] = useState("")
   const [password, setPassword] = useState("")
+  
 
 
   const handlePasswordVisibility = () => {
@@ -28,7 +32,7 @@ function Signup() {
     }
   };
   /* eslint-disable */
-  const registerUser = () => {
+  const registerUser = async() => {
     try {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
       if (name === "") {
@@ -55,11 +59,39 @@ function Signup() {
       } else {
         setError("")
         //save user
-
+        var formData = new FormData()
+        formData.append("UserID", 2);
+        formData.append("name", name)
+        formData.append("email", email)
+        formData.append("password", password)
+        formData.append("phoneNumber", mobile)
+        formData.append("profilePicture", "pic")
+  
+  
+  
+  
+        fetch(url, {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    userID:"2",
+    name: 'yourOtherValue',
+    email: 'yourOtherValue',
+    password: 'yourOtherValue',
+    phoneNumber: 'yourOtherValue',
+    profilePicture: 'yourOtherValue',
+  })
+})
       }
 
     } catch (e) {
+      
 
+    const json = await response.json();
+    alert(JSON.stringify(json))
     }
 
   }
