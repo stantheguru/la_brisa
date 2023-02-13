@@ -19,6 +19,7 @@ function Signup() {
   const [name, setName] = useState("")
   const [mobile, setMobile] = useState("")
   const [password, setPassword] = useState("")
+  const [data, setData] = useState([])
   
 
 
@@ -67,9 +68,20 @@ function Signup() {
         formData.append("phoneNumber", mobile)
         formData.append("profilePicture", "pic")
   
+
+       
+
+        const response = await fetch("https://8ca4-102-213-93-44.ngrok.io/api/User", {
+          headers:'Access-Control-Allow-Origin","*"'
+          
+         
+      });
+
+      const json = await response.json();
+     
+      alert(json)
   
-  
-  
+  /*
         fetch(url, {
   method: 'POST',
   headers: {
@@ -84,14 +96,13 @@ function Signup() {
     phoneNumber: 'yourOtherValue',
     profilePicture: 'yourOtherValue',
   })
-})
+})*/
       }
 
     } catch (e) {
       
 
-    const json = await response.json();
-    alert(JSON.stringify(json))
+    alert(e)
     }
 
   }
