@@ -10,7 +10,7 @@ import * as base from "../env";
 
 var url = base.BASE_URL
 
-function Signup() {
+function Profile() {
   const navigate = useNavigate();
   const [rightIcon, setRightIcon] = useState(eyeoff);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -22,7 +22,7 @@ function Signup() {
   const [data, setData] = useState([])
   const [file, setFile] = useState("")
   const [fileName, setFileName] = useState("")
-
+  
 
 
   const handlePasswordVisibility = () => {
@@ -35,9 +35,13 @@ function Signup() {
     }
   };
 
-
+  const saveFile =(e)=>{
+    setFile(e.target.files[0])
+    setFileName(e.target.files[0].name)
+    alert(e)
+  }
   /* eslint-disable */
-  const registerUser = async () => {
+  const registerUser = async() => {
     try {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
       if (name === "") {
@@ -52,9 +56,9 @@ function Signup() {
         setError("Please enter mobile number")
       } else if (!(mobile.startsWith("1") || mobile.startsWith("7"))) {
         setError("The mobile number should start with 1 or 7")
-      } else if (mobile.split("").length < 9) {
+      }else if(mobile.split("").length<9 ){
         setError("The mobile number should be 9 characters")
-      } else if (mobile.split("").length > 9) {
+      }else if(mobile.split("").length>9 ){
         setError("The mobile number be 9 characters")
       }
       else if (password === "") {
@@ -71,33 +75,32 @@ function Signup() {
         formData.append("Password", password)
         formData.append("PhoneNumber", mobile)
         formData.append("ProfilePicture", "pic")
-
-        const response = await fetch(url, {
-          method: 'POST',
-          body: formData,
-          
-      });
-
-      const json = await response.json();
-      if (json.toString() == "true") {
-        alert("Account created successfully!!")
-      }else{
-        alert("Email Exists. Use a different one!!")
-      }
-
-      
         
+
+fetch(url,{
+      method: 'POST',
+    
+      body: formData
+    }).then(r=>r.json()).then(res=>{
+      if(res){
+        var success = JSON.stringify(res);
+        if (success=="true"){
+          alert("Account created successfully!!")
+        }
+       
+      }
+    });
       }
 
     } catch (e) {
+      
 
-
-      alert(e)
+    alert(e)
     }
 
   }
 
-  const clear = () => {
+  const clear =()=>{
     setName("")
     setEmail("")
     setPassword("")
@@ -119,7 +122,7 @@ function Signup() {
 
       <div className='textfield'>
         <label className='labelCode'>+254</label>
-        <input type="number" placeholder='Enter Mobile Number eg 700000000' onChange={(e) => setMobile(e.target.value)} value={mobile} />
+        <input type="number"  placeholder='Enter Mobile Number eg 700000000' onChange={(e) => setMobile(e.target.value)} value={mobile} />
       </div>
 
       <div className='textfield'>
@@ -127,16 +130,18 @@ function Signup() {
         <img alt="eye" onClick={handlePasswordVisibility} src={rightIcon} />
       </div>
 
-
+      <div className='textfield'>
+       <input type="file" onChange={saveFile}/>
+      </div>
 
       <div className='buttons'>
         <button className='clear' onClick={clear}>Clear</button>
         <button className='submit' onClick={registerUser}>Submit</button>
       </div>
       <h5 className='error'>{error}</h5>
-      <h5 className='already'>Already have an account?<span onClick={() => navigate("/login")} className='loginText'> Login</span></h5>
+      <h5 className='already'>Already have an account?<span onClick={()=>navigate("/login")} className='loginText'> Login</span></h5>
     </>
   );
 }
 
-export default Signup;
+export default Profile;
