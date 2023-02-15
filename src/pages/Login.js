@@ -4,6 +4,14 @@ import eyeoff from './assets/eye-off.png'
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
+import * as base from "../env";
+
+
+
+var url = base.BASE_URL
+
+
+
 
 
 function Login() {
@@ -26,7 +34,7 @@ function Login() {
     }
   };
   /* eslint-disable */
-  const login = () => {
+  const login = async() => {
     try {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
        if (email === "") {
@@ -41,6 +49,34 @@ function Login() {
       } else {
         setError("")
         //save user
+
+        var formData = new FormData()
+        formData.append("Email", email)
+        formData.append("Password", password)
+       
+        //formData.append("ProfilePicture", "pic")
+
+        const response = await fetch(url+"/login", {
+          method: 'POST',
+          body: formData,
+          
+      });
+
+      const json = await response.json();
+    
+      if (json.exists == "YES") {
+        localStorage.clear()
+       
+        localStorage.setItem("email", email)
+        localStorage.setItem("name", json.Name)
+        localStorage.setItem("mobile", json.Mobile)
+        localStorage.setItem("picture", json.Picture)
+        
+        navigate("/holidays")
+      }else{
+        setError("Incorrect login credentials!!")
+      }
+
       }
 
     } catch (e) {
@@ -49,11 +85,7 @@ function Login() {
 
   }
 
-  const clear =()=>{
-    setEmail("")
-    setPassword("")
-    setError("")
-  }
+ 
 
   return (
     <>

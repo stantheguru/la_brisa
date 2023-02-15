@@ -19,9 +19,7 @@ function Signup() {
   const [name, setName] = useState("")
   const [mobile, setMobile] = useState("")
   const [password, setPassword] = useState("")
-  const [data, setData] = useState([])
-  const [file, setFile] = useState("")
-  const [fileName, setFileName] = useState("")
+  
 
 
 
@@ -72,7 +70,7 @@ function Signup() {
         formData.append("PhoneNumber", mobile)
         formData.append("ProfilePicture", "pic")
 
-        const response = await fetch(url, {
+        const response = await fetch(url+"/signup", {
           method: 'POST',
           body: formData,
           
