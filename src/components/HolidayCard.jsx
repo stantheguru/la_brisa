@@ -1,17 +1,19 @@
 import React from 'react'
 
 const HolidayCard =({holiday})=>{
+    console.log(JSON.stringify(holiday))
     return (
+        
         <div className="holiday">
             <div>
-                <p>{holiday.Year}</p>
+                <p>{holiday.StartDate}</p>
             </div>
             <div>
-                <img src={holiday.Poster !== "N/A" ? holiday.Poster : "http://via.placeholder.com/400"} alt={holiday.Title} />
+                <img src={holiday.Image !== "N/A" ? holiday.Image : "http://via.placeholder.com/400"} alt={holiday.HolidayName} />
             </div>
             <div>
-                <span>{holiday.Type}</span>
-                <h3>{holiday.Title}</h3>
+                <span>{holiday.Location}</span>
+                <h3>{holiday.HolidayName}</h3>
             </div>
         </div>
     )
