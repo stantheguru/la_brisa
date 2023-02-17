@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import HolidayCard from '../components/HolidayCard'
-import '../App.css'
-import picIcon from './assets/picture.png'
-import { Container, Form, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react'
 import * as base from "../env";
+import { Container, Form, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
+import picIcon from './assets/picture.png'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
+
+import { useNavigate } from 'react-router-dom';
 
 
 var url = base.BASE_URL
+var url_image = base.BASE_URL_IMAGE
 
-
-
-export default function Holidays() {
+const ManageHolidays =()=>{
     const navigate = useNavigate()
     const [searchTerm, setSearchTerm] = useState("")
+
     const [isHoliday, setIsHoliday] = useState("")
     const [holidays, setHolidays] = useState([])
 
@@ -23,7 +24,7 @@ export default function Holidays() {
    
 
     const fetchHolidays = async () => {
-      
+      try{
             const response = await fetch(url+"/holidays")
             const data = await response.json();
             setHolidays(data)
@@ -34,8 +35,9 @@ export default function Holidays() {
                 setIsHoliday("True")
             }
           
-
-        
+      }catch(e){
+        //alert(e)
+      }
 
 
     }
@@ -46,6 +48,7 @@ export default function Holidays() {
         
     }
 
+   
 
     useEffect(() => {
         fetchHolidays()
@@ -53,10 +56,55 @@ export default function Holidays() {
     }, [])
 
 
+    function confirmDelete(id){
+        confirmAlert({
+            title: 'Confirm Delete',
+            message: 'Are you sure you want to delete this holiday.',
+            buttons: [
+              {
+                label: 'Yes',
+                onClick: () => {Delete(id)}
+              },
+              {
+                label: 'No',
+                onClick: () => {}
+              }
+            ]
+          });
+    }
+
+    const Delete = async(id)=>{
+        
+    
+       try{
+
+       
+        var formData = new FormData()
+        formData.append("HolidayID", id)
+       
+        //formData.append("ProfilePicture", "pic")
+
+        const response = await fetch(url+"/delete", {
+          method: 'POST',
+          body: formData,
+          
+      });
+
+      const json = await response.json();
+     var success = JSON.stringify(json)
+     if(success=="true"){
+        alert("Deleted Successfully!!")
+        fetchHolidays()
+     }
+    }catch(e){
+        alert(e)
+    }
+    }
+
+
     return (
         <>
-
-            <Navbar className='nav' bg="light" expand="lg">
+        <Navbar className='nav' bg="light" expand="lg">
                 <Container fluid>
                     <Navbar.Brand href="/">La Brisa</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
@@ -113,36 +161,49 @@ export default function Holidays() {
                                 onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}
                             />
                             <Button
-                                onClick={() => fetchHolidays()}
+                               
                                 variant="outline-success">Search</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-
-            <div className="app">
-
-
-                {isHoliday === "True" ? (
-                    <div className='container'>
-                        {holidays.map((holiday) => (
-                            <HolidayCard holiday={holiday} />
-                        )
-
-                        )}
-
-                    </div>
-                ) : (
-                    <div className='container'>
-                        <div className='empty'>
-                            <h2>No Holidays Found</h2>
-                        </div>
-
-                    </div>
-                )}
-
-            </div>
-        </>
-
+            <div className='appManage'>
+        <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Holiday ID</th>
+      <th scope="col">Holiday Name</th>
+      <th scope="col">Location</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Price</th>
+      <th scope="col">Delete</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+   {holidays.map((holiday)=>(
+    <tr>
+      <th scope="row">{holiday.HolidayID}</th>
+      <td><img className='picture' src={url_image+holiday.Image}/></td>
+      <td>{holiday.HolidayName}</td>
+      <td>{holiday.Location}</td>
+      <td>{holiday.StartDate}</td>
+      <td>{holiday.EndDate}</td>
+      <td>KES{holiday.Price}.00</td>
+      <td><button onClick={(e)=>confirmDelete(holiday.HolidayID)} class="btn btn-danger">Delete</button></td>
+    </tr>
+   )
+   )}
+    
+ 
+   
+  </tbody>
+</table>
+</div>
+</>
+        
     )
 }
+
+export default ManageHolidays

@@ -38,7 +38,6 @@ function AddHoliday() {
   const saveFile =(e)=>{
     setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
-    alert(e)
   }
   /* eslint-disable */
   const addHoliday = async() => {

@@ -1,7 +1,7 @@
 import '../App.css';
 import eye from './assets/eye.png'
 import eyeoff from './assets/eye-off.png'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import * as base from "../env";
@@ -22,6 +22,12 @@ function Login() {
   const [error, setError] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  useEffect(()=>{
+    if(localStorage.getItem("name")!=null){
+    window.location.replace("/holidays")
+    }
+  }, [])
 
 
   const handlePasswordVisibility = () => {

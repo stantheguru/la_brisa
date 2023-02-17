@@ -1,61 +1,63 @@
-import React, { useState, useEffect } from 'react'
-import HolidayCard from '../components/HolidayCard'
+import React, { useEffect, useState } from 'react'
+import { Container, Form, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import '../App.css'
 import picIcon from './assets/picture.png'
-import { Container, Form, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import * as base from "../env";
 
 
 
 var url = base.BASE_URL
+var url_image = base.BASE_URL_IMAGE
 
-
-
-export default function Holidays() {
+const HolidayDetails = () => {
     const navigate = useNavigate()
+    const [details, setDetails] = useState({})
     const [searchTerm, setSearchTerm] = useState("")
-    const [isHoliday, setIsHoliday] = useState("")
-    const [holidays, setHolidays] = useState([])
 
-
-
-   
-
-    const fetchHolidays = async () => {
-      
-            const response = await fetch(url+"/holidays")
-            const data = await response.json();
-            setHolidays(data)
-            if(data.length===0){
-                setIsHoliday("False")
-
-            }else{
-                setIsHoliday("True")
-            }
-          
-
-        
-
-
-    }
-
-    const Logout = () =>{
+    const Logout = () => {
         localStorage.clear()
         navigate("/login")
-        
+
     }
 
 
+    const fetchDetails = async () => {
+        try {
+            var URL = window.location.toString()
+
+            var index = URL.lastIndexOf("/") + 1
+            var id = URL.substring(index)
+
+            var formData = new FormData()
+            formData.append("HolidayID", id)
+      
+
+            //formData.append("ProfilePicture", "pic")
+
+            const response = await fetch(url + "/holiday_details", {
+                method: 'POST',
+                body: formData,
+
+            });
+            const data = await response.json();
+            setDetails(data)
+
+
+        } catch (e) {
+            alert(e)
+        }
+
+
+
+    }
+
     useEffect(() => {
-        fetchHolidays()
-        //searchHolidays('Spiderman')
+        fetchDetails()
+
     }, [])
-
-
     return (
         <>
-
             <Navbar className='nav' bg="light" expand="lg">
                 <Container fluid>
                     <Navbar.Brand href="/">La Brisa</Navbar.Brand>
@@ -98,11 +100,6 @@ export default function Holidays() {
 
                             }
 
-
-
-
-
-
                         </Nav>
                         <Form className="d-flex">
                             <Form.Control
@@ -113,36 +110,59 @@ export default function Holidays() {
                                 onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}
                             />
                             <Button
-                                onClick={() => fetchHolidays()}
+
                                 variant="outline-success">Search</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
 
-            <div className="app">
 
-
-                {isHoliday === "True" ? (
-                    <div className='container'>
-                        {holidays.map((holiday) => (
-                            <HolidayCard holiday={holiday} />
-                        )
-
-                        )}
-
+            <div class="card">
+                <img src={url_image+details.Image} class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">{details.HolidayName}</h5>
+                    
+                    
+                    <hr></hr>
+                    <div className="cardItem">
+                    <h6 className="subtitle">Location</h6>
+                    <div className='space'></div>
+                        <p>{details.Location}</p>
                     </div>
-                ) : (
-                    <div className='container'>
-                        <div className='empty'>
-                            <h2>No Holidays Found</h2>
+                    <hr></hr>
+
+                    
+                    <div className="cardItem">
+                    <h6 className="subtitle">Price</h6>
+                    <div className='space'></div>
+                        <p>KES{details.Price}</p>
+                    </div>
+                    <hr></hr>
+
+                    <h6 className="subtitle">Dates</h6>
+                    <div className='dates'>
+                    <div className="cardDate">
+                            <p>{details.StartDate}</p>
                         </div>
-
+                        <h6 className="to">TO</h6>
+                        <div className="cardDate">
+                            <p>{details.EndDate}</p>
+                        </div>
+                         <button className='submitBook'>Book Now</button>
                     </div>
-                )}
+                 
+                   
+                   
 
+                  
+
+                 
+                </div>
             </div>
         </>
 
     )
 }
+
+export default HolidayDetails

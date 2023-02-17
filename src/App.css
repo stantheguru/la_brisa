@@ -25,6 +25,15 @@ body {
   flex-direction: column;
 }
 
+.appManage {
+padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width:80%;
+}
+
 .nav{
   width:100%;
   padding:0.8rem
@@ -126,6 +135,18 @@ margin-top: 8%;
   border-width: 0.15rem;
   border-style: solid;
   border-radius: 0.5rem;
+  padding: 0.6rem;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submitBook {
+  width: 40%;
+  border-width: 0.15rem;
+  border-style: solid;
+  border-radius: 1rem;
   padding: 0.6rem;
   background-color: black;
   color: white;
@@ -274,6 +295,64 @@ margin-top: 8%;
 .holiday:hover div:nth-of-type(1) {
   opacity: 1;
 }
+.card {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 20px;
+  width: 90%;
+}
+.card-title {
+  font-weight: bold;
+  font-family: "Raleway", sans-serif;
+  font-size: 30px;
+}
+.card img {
+  width: 30%;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: calc(0.25rem - 1px);
+}
+.cardItem{
+
+  padding-left: 0.8%;
+  padding-right: 0.8%;
+  padding-top: 1.6%;
+  border-radius: 10px;
+  flex-direction: row;
+  display: flex;
+  
+}
+
+.subtitle{
+  font-weight: bold;
+  align-items: center;
+}
+
+.dates{
+  flex-direction:row;
+  display: flex;
+}
+.itemRight{
+  float: inline-end;
+}
+.space{
+  width: 20%;
+}
+
+.cardDate{
+border-width: 0.15rem;
+border-style: solid;
+padding-left: 2%;
+padding-right: 2%;
+padding-top: 2%;
+border-radius: 1rem;
+
+}
+.to{
+  margin-left: 2%;
+  margin-right: 2%;
+  padding-top: 2%;
+
+}
 /*
 @media screen and (max-width: 600px) {
   .app {
@@ -359,5 +438,7 @@ margin-top: 8%;
     width: "100%";
     margin: 1rem;
   }
+ 
 }
+
 
