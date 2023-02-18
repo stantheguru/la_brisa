@@ -9,6 +9,7 @@ import * as base from "../env";
 
 
 var url = base.BASE_URL
+var url_image = base.BASE_URL_IMAGE
 
 
 
@@ -17,16 +18,45 @@ export default function Holidays() {
     const [searchTerm, setSearchTerm] = useState("")
     const [isHoliday, setIsHoliday] = useState("")
     const [holidays, setHolidays] = useState([])
+    const [filteredholidays, setFilteredHolidays] = useState(holidays)
 
 
 
    
+    const searchFilterFunction = (text) => {
+       
+       
+        // Check if searched text is not blank
+        if (text) {
+            // Inserted text is not blank
+            // Filter the masterDataSource
+            // Update FilteredDataSource
+            const newData = holidays.filter(function (item) {
+                const itemData = item.HolidayName
+                    ? item.HolidayName.toUpperCase()
+                    : ''.toUpperCase();
+                const textData = text.toUpperCase();
+                return itemData.indexOf(textData) > -1;
+            });
+            setFilteredHolidays(newData);
+            setSearchTerm(text);
+        } else {
+            // Inserted text is blank
+            // Update FilteredDataSource with masterDataSource
+            setFilteredHolidays(holidays);
+            setSearchTerm(text);
+        }
+    };
 
     const fetchHolidays = async () => {
-      
+        if(localStorage.getItem("name")==null){
+            window.location.replace("/login")
+            }
+      //alert(localStorage.getItem("picture"))
             const response = await fetch(url+"/holidays")
             const data = await response.json();
             setHolidays(data)
+            setFilteredHolidays(data)
             if(data.length===0){
                 setIsHoliday("False")
 
@@ -45,6 +75,10 @@ export default function Holidays() {
         navigate("/login")
         
     }
+
+  
+       
+    
 
 
     useEffect(() => {
@@ -76,10 +110,10 @@ export default function Holidays() {
                                 <>
                                     <Nav.Link>Hello, {localStorage.getItem("name")}</Nav.Link>
 
-                                    <NavDropdown title={<img alt="holiday" className='picture' src={picIcon} />} id="navbarScrollingDropdown">
+                                    <NavDropdown title={<img alt="holiday" className='picture' src={localStorage.getItem("picture")!=""?url_image+localStorage.getItem("picture"):picIcon} />} id="navbarScrollingDropdown">
 
 
-                                        <NavDropdown.Item href="#action3">My Profile</NavDropdown.Item>
+                                        <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
                                         <NavDropdown.Item href="#action4">
                                             Change Password
                                         </NavDropdown.Item>
@@ -113,7 +147,7 @@ export default function Holidays() {
                                 onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}
                             />
                             <Button
-                                onClick={() => fetchHolidays()}
+                                onClick={() => searchFilterFunction(searchTerm)}
                                 variant="outline-success">Search</Button>
                         </Form>
                     </Navbar.Collapse>
@@ -125,7 +159,7 @@ export default function Holidays() {
 
                 {isHoliday === "True" ? (
                     <div className='container'>
-                        {holidays.map((holiday) => (
+                        {filteredholidays.map((holiday) => (
                             <HolidayCard holiday={holiday} />
                         )
 

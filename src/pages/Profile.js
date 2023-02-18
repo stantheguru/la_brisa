@@ -1,7 +1,20 @@
 import '../App.css';
-import eye from './assets/eye.png'
-import eyeoff from './assets/eye-off.png'
-import { useState } from 'react';
+import picture from './assets/picture.png'
+import { useState, useEffect } from 'react';
+import backGround from './assets/background.jpg'
+import { Container, Form, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
+import picIcon from './assets/picture.png'
+import camera from './assets/camera.png'
+
+
+
+import us from './assets/us.png'
+import job from './assets/job.png'
+
+import em from './assets/email.png'
+
+
+
 
 import { useNavigate } from "react-router-dom";
 import * as base from "../env";
@@ -9,138 +22,183 @@ import * as base from "../env";
 
 
 var url = base.BASE_URL
+var url_image = base.BASE_URL_IMAGE
 
 function Profile() {
   const navigate = useNavigate();
-  const [rightIcon, setRightIcon] = useState(eyeoff);
-  const [passwordVisibility, setPasswordVisibility] = useState(false);
-  const [error, setError] = useState("")
-  const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
-  const [mobile, setMobile] = useState("")
-  const [password, setPassword] = useState("")
-  const [data, setData] = useState([])
+
+
   const [file, setFile] = useState("")
   const [fileName, setFileName] = useState("")
-  
+  const [image, setImage] = useState(localStorage.getItem("picture"))
 
+    const Logout = () => {
+        localStorage.clear()
+        navigate("/login")
 
-  const handlePasswordVisibility = () => {
-    if (rightIcon === eye) {
-      setRightIcon(eyeoff);
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === eyeoff) {
-      setRightIcon(eye);
-      setPasswordVisibility(!passwordVisibility);
     }
-  };
 
-  const saveFile =(e)=>{
+  
+async function fetchUser(){
+  var formData = new FormData()
+        formData.append("Email", localStorage.getItem("email"))
+        formData.append("Image", file)
+       
+        //formData.append("ProfilePicture", "pic")
+
+        const response = await fetch(url+"/fetch_user", {
+          method: 'POST',
+          body: formData,
+          
+      });
+
+      const json = await response.json();
+      setImage(json.ProfilePicture)
+      localStorage.removeItem("picture")
+    localStorage.setItem("picture", json.ProfilePicture)
+
+      
+}
+
+
+  const saveFile = async(e)=>{
+    setFile("")
+    setFileName("")
     setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
-    alert(e)
+    
+    try{
+
+       
+      var formData = new FormData()
+      formData.append("file", e.target.files[0])
+      formData.append("Email", localStorage.getItem("email"))
+      formData.append("Image", fileName)
+
+      
+     
+      //formData.append("ProfilePicture", "pic")
+
+      const response = await fetch(url+"/update_profile", {
+        method: 'POST',
+        body: formData,
+        
+    });
+
+    const json = await response.json();
+   var success = JSON.stringify(json)
+   if(success=="true"){
+    
+    //localStorage.removeItem("picture")
+    //localStorage.setItem("picture", "/images/"+e.target.files[0].name)
+      alert("Updated Successfully!!")
+      fetchUser()
+   }
+  }catch(e){
+      alert(e)
+  }
+    
   }
   /* eslint-disable */
-  const registerUser = async() => {
-    try {
-      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (name === "") {
+  
 
-        setError("Please enter name")
-      } else if (email === "") {
-        setError("Please enter email")
-      } else if (reg.test(email) == false) {
-        setError("The email is invalid")
-        return false;
-      } else if (mobile === "") {
-        setError("Please enter mobile number")
-      } else if (!(mobile.startsWith("1") || mobile.startsWith("7"))) {
-        setError("The mobile number should start with 1 or 7")
-      }else if(mobile.split("").length<9 ){
-        setError("The mobile number should be 9 characters")
-      }else if(mobile.split("").length>9 ){
-        setError("The mobile number be 9 characters")
-      }
-      else if (password === "") {
-        setError("Please enter password")
-      } else if (password.length < 8) {
-        setError("Password must be at least 8 characters")
-      } else {
-        setError("")
-        //save user
-        var formData = new FormData()
-        formData.append("UserID", 2);
-        formData.append("Name", name)
-        formData.append("Email", email)
-        formData.append("Password", password)
-        formData.append("PhoneNumber", mobile)
-        formData.append("ProfilePicture", "pic")
-        
-
-fetch(url,{
-      method: 'POST',
-    
-      body: formData
-    }).then(r=>r.json()).then(res=>{
-      if(res){
-        var success = JSON.stringify(res);
-        if (success=="true"){
-          alert("Account created successfully!!")
-        }
-       
-      }
-    });
-      }
-
-    } catch (e) {
-      
-
-    alert(e)
+ function checkLogin(){
+  if(localStorage.getItem("name")==null){
+    window.location.replace("/login")
     }
+ }
 
-  }
 
-  const clear =()=>{
-    setName("")
-    setEmail("")
-    setPassword("")
-    setError("")
-  }
+  useEffect(()=>{
+    checkLogin()
+  },[])
+
+ 
 
   return (
     <>
-      <div className='title'>
-        <h1>Create an Account</h1>
-      </div>
 
-      <div className='textfield'>
-        <input placeholder='Enter name' onChange={(e) => setName(e.target.value)} value={name} />
-      </div>
-      <div className='textfield'>
-        <input placeholder='Enter email' onChange={(e) => setEmail(e.target.value)} value={email} />
-      </div>
+<Navbar className='nav' bg="light" expand="lg">
+                <Container fluid>
+                    <Navbar.Brand href="/">La Brisa</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="navbarScroll" />
+                    <Navbar.Collapse id="navbarScroll">
+                        <Nav
+                            className="me-auto my-2 my-lg-0"
+                            style={{ maxHeight: '100px' }}
+                            navbarScroll
+                        >
+                            <Nav.Link href="#action1">Home</Nav.Link>
+                            <Nav.Link href="/holidays">Holidays</Nav.Link>
+                            <Nav.Link href="/manage_holidays">Manage Holidays</Nav.Link>
+                            <Nav.Link href="/add_holiday">Add Holiday</Nav.Link>
 
-      <div className='textfield'>
-        <label className='labelCode'>+254</label>
-        <input type="number"  placeholder='Enter Mobile Number eg 700000000' onChange={(e) => setMobile(e.target.value)} value={mobile} />
-      </div>
 
-      <div className='textfield'>
-        <input type={passwordVisibility === true ? "text" : "password"} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} value={password} />
-        <img alt="eye" onClick={handlePasswordVisibility} src={rightIcon} />
-      </div>
+                            
 
-      <div className='textfield'>
-       <input type="file" onChange={saveFile}/>
-      </div>
+                        </Nav>
+                        {localStorage.getItem("name") != null ? (
+                                <>
+                                    <Nav.Link>Hello, {localStorage.getItem("name")}</Nav.Link>
 
-      <div className='buttons'>
-        <button className='clear' onClick={clear}>Clear</button>
-        <button className='submit' onClick={registerUser}>Submit</button>
+                                    <NavDropdown title={<img alt="holiday" className='picture' src={localStorage.getItem("picture")!=""?url_image+image:picIcon} />} id="navbarScrollingDropdown">
+
+
+                                        <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
+                                        
+                                        <NavDropdown.Divider />
+                                        <NavDropdown.Item onClick={Logout}>
+                                            Logout
+                                        </NavDropdown.Item>
+                                    </NavDropdown>
+                                </>
+
+                            ) : (
+                                <> <Nav.Link href="/login">Login</Nav.Link>
+                                    <Nav.Link href="/signup">Signup</Nav.Link>
+                                </>
+                            )
+
+                            }
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+    <div className="cardProfile">
+      <div className="card-img-top">
+      <img className='backImage' src={backGround} alt="Card image cap"/>
+
       </div>
-      <h5 className='error'>{error}</h5>
-      <h5 className='already'>Already have an account?<span onClick={()=>navigate("/login")} className='loginText'> Login</span></h5>
-    </>
+  <div class="card-body">
+  
+    <img className="profilePicture" src={localStorage.getItem("picture")!=""?url_image+image:picIcon}/>
+   <div className="inner">
+   <h5 class="name">{localStorage.getItem("name")}</h5>
+   <div className='locationDiv'>
+   <img className="locationIcon" src={us}/>
+   <h5 class="location">Las Vegas, Unidos Estados</h5>
+   </div>
+
+
+   <div className='emailDiv'>
+   <img className="emailIcon" src={em}/>
+   <h5 class="email">{localStorage.getItem("email")}</h5>
+
+   <img className="emailIcon" src={job}/>
+   <h5 class="email">Travel Consultant</h5>
+   </div>
+  
+
+   <div className='buttons'>
+        <button className='messageBtn' >Message</button>
+        <button className='shareBtn' ><input type="file" onChange={saveFile} id="imageUpload" accept="image/*" /></button>
+       
+      </div>
+    
+   </div>
+    
+  </div>
+</div>
+     </>
   );
 }
 

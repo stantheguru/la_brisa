@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import * as base from "../env";
-import { Container, Form, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import picIcon from './assets/picture.png'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -14,26 +14,19 @@ var url_image = base.BASE_URL_IMAGE
 
 const ManageHolidays =()=>{
     const navigate = useNavigate()
-    const [searchTerm, setSearchTerm] = useState("")
-
-    const [isHoliday, setIsHoliday] = useState("")
-    const [holidays, setHolidays] = useState([])
-
-
-
    
 
+    const [holidays, setHolidays] = useState([])
+
     const fetchHolidays = async () => {
+        if(localStorage.getItem("name")==null){
+            window.location.replace("/login")
+            }
       try{
             const response = await fetch(url+"/holidays")
             const data = await response.json();
             setHolidays(data)
-            if(data.length===0){
-                setIsHoliday("False")
-
-            }else{
-                setIsHoliday("True")
-            }
+           
           
       }catch(e){
         //alert(e)
@@ -120,17 +113,18 @@ const ManageHolidays =()=>{
                             <Nav.Link href="/add_holiday">Add Holiday</Nav.Link>
 
 
-                            {localStorage.getItem("name") != null ? (
+                           
+
+                        </Nav>
+                        {localStorage.getItem("name") != null ? (
                                 <>
                                     <Nav.Link>Hello, {localStorage.getItem("name")}</Nav.Link>
 
-                                    <NavDropdown title={<img alt="holiday" className='picture' src={picIcon} />} id="navbarScrollingDropdown">
+                                    <NavDropdown title={<img alt="holiday" className='picture' src={localStorage.getItem("picture")!=""?url_image+localStorage.getItem("picture"):picIcon} />} id="navbarScrollingDropdown">
 
 
-                                        <NavDropdown.Item href="#action3">My Profile</NavDropdown.Item>
-                                        <NavDropdown.Item href="#action4">
-                                            Change Password
-                                        </NavDropdown.Item>
+                                        <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
+                                        
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item onClick={Logout}>
                                             Logout
@@ -145,25 +139,6 @@ const ManageHolidays =()=>{
                             )
 
                             }
-
-
-
-
-
-
-                        </Nav>
-                        <Form className="d-flex">
-                            <Form.Control
-                                type="search"
-                                placeholder="Search a holiday"
-                                className="me-2"
-                                aria-label="Search"
-                                onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm}
-                            />
-                            <Button
-                               
-                                variant="outline-success">Search</Button>
-                        </Form>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

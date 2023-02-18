@@ -1,7 +1,5 @@
 import '../App.css';
-import eye from './assets/eye.png'
-import eyeoff from './assets/eye-off.png'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useNavigate } from "react-router-dom";
 import * as base from "../env";
@@ -12,8 +10,6 @@ var url = base.BASE_URL
 
 function AddHoliday() {
   const navigate = useNavigate();
-  const [rightIcon, setRightIcon] = useState(eyeoff);
-  const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [error, setError] = useState("")
   const [location, setLocation] = useState("")
   const [start_date, setStartDate] = useState("")
@@ -24,16 +20,6 @@ function AddHoliday() {
   const [fileName, setFileName] = useState("")
   
 
-
-  const handlePasswordVisibility = () => {
-    if (rightIcon === eye) {
-      setRightIcon(eyeoff);
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === eyeoff) {
-      setRightIcon(eye);
-      setPasswordVisibility(!passwordVisibility);
-    }
-  };
 
   const saveFile =(e)=>{
     setFile(e.target.files[0])
@@ -80,6 +66,18 @@ function AddHoliday() {
     }
 
   }
+
+  function checkLogin(){
+    if(localStorage.getItem("name")==null){
+      window.location.replace("/login")
+      }
+   }
+  
+  
+    useEffect(()=>{
+      checkLogin()
+    },[])
+  
 
   const clear =()=>{
     setName("")

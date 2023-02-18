@@ -1,7 +1,7 @@
 import '../App.css';
 import eye from './assets/eye.png'
 import eyeoff from './assets/eye-off.png'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useNavigate } from "react-router-dom";
 import * as base from "../env";
@@ -32,6 +32,12 @@ function Signup() {
       setPasswordVisibility(!passwordVisibility);
     }
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("name")!=null){
+    window.location.replace("/holidays")
+    }
+  }, [])
 
 
   /* eslint-disable */

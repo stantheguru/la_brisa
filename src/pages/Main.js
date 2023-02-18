@@ -7,6 +7,7 @@ import Holidays from './Holidays';
 import AddHoliday from './AddHoliday';
 import HolidayDetails from './HolidayDetails';
 import ManageHolidays from './ManageHolidays';
+import Profile from './Profile';
 
 
 const Main = () => {
@@ -19,6 +20,7 @@ const Main = () => {
            <Route exact path="/holidays" element={<Holidays />} />  
            <Route exact path="/manage_holidays" element={<ManageHolidays />} />  
            <Route exact path="/add_holiday" element={<AddHoliday />} />  
+           <Route exact path="/profile" element={<Profile />} />  
            <Route exact path="/holiday_details/:id"  element={<HolidayDetails />} />
            <Route exact path="/" element={<Signup />} />   
         </Route>
