@@ -21,8 +21,6 @@ export default function Holidays() {
     const [filteredholidays, setFilteredHolidays] = useState(holidays)
 
 
-
-   
     const searchFilterFunction = (text) => {
        
        
