@@ -8,7 +8,6 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import { useNavigate } from 'react-router-dom';
 
-
 var url = base.BASE_URL
 var url_image = base.BASE_URL_IMAGE
 
