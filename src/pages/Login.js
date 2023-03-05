@@ -6,12 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import * as base from "../env";
 
-
-
 var url = base.BASE_URL
-
-
-
 
 
 function Login() {
